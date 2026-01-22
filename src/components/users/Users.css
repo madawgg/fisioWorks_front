@@ -1,0 +1,21 @@
+
+.user-deleted {
+  opacity: 0.6;
+  background-color: #f8f9fa !important;
+}
+
+.user-deleted:hover {
+  background-color: #e9ecef !important;
+}
+
+/* Estilos para inputs en modo oscuro */
+.input-dark:focus {
+  background-color: #2d2d2d !important;
+  border-color: #198754 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.input-dark::placeholder {
+  color: #6c757d;
+}

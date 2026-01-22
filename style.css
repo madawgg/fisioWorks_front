@@ -1,0 +1,19 @@
+.input-dark::placeholder {
+  color: #8f8f8f;
+  opacity: 1;
+}
+
+.text-olive {
+  color: #95a241;
+}
+.bg-olive {
+  background-color: #95a241 !important;
+}
+
+.text-link {
+  color: #597486;
+}
+.text-link:hover {
+  color: #4facea;
+  transition: color 0.3s ease;
+}

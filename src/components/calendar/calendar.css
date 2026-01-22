@@ -1,0 +1,320 @@
+/* === FULLCALENDAR OLIVE LIGHT INVERSE THEME === */
+.fc {
+  --fc-border-color: #a3b87a;
+  --fc-button-bg-color: #8fae3d;
+  --fc-button-border-color: #8fae3d;
+  --fc-button-text-color: #fff;
+  --fc-button-hover-bg-color: #b8cc8c;
+  --fc-button-active-bg-color: #b8cc8c;
+  --fc-event-bg-color: #8fae3d;
+  --fc-event-border-color: #8fae3d;
+  --fc-today-bg-color: #d1e0a7;
+  --fc-page-bg-color: #e6edd6;
+  --fc-neutral-bg-color: #f1f6dd;
+  --fc-list-event-hover-bg-color: #d9e5b9;
+}
+
+/* === CALENDARIO GENERAL === */
+.fc {
+  background-color: #e6edd6;
+  color: #1a1a1a;
+  border-radius: 0.75rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* === TOOLBAR === */
+.fc-toolbar {
+  background-color: #e6edd6;
+  color: #1a1a1a;
+  border-bottom: 1px solid #a3b87a;
+  padding: 0.5rem;
+}
+
+.fc-toolbar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* === BOTONES === */
+.fc-button {
+  text-transform: capitalize;
+  border-radius: 0.5rem !important;
+  box-shadow: none;
+}
+
+.fc-button-primary:disabled {
+  opacity: 0.5;
+}
+
+/* === CABECERA DE DÍAS === */
+.fc-col-header-cell {
+  background-color: #d9e5b9;
+  color: #1a1a1a;
+  border: 1px solid #a3b87a;
+  padding: 0.5rem;
+  font-weight: 500;
+}
+.fc-col-header-cell-cushion{
+    color: black;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* === CELDAS DEL DÍA === */
+.fc-daygrid-day {
+  background-color: #f1f6dd;
+  border: 1px solid #a3b87a;
+  height: 100px !important;
+  max-height: 100px !important;
+}
+
+/* Forzar altura fija en las filas */
+.fc-daygrid-body tr {
+  height: 100px !important;
+  max-height: 100px !important;
+}
+
+.fc-daygrid-body td {
+  height: 100px !important;
+  max-height: 100px !important;
+  vertical-align: top !important;
+}
+
+/* Hacer la celda con altura fija y scroll interno */
+.fc-daygrid-day-frame {
+  position: relative !important;
+  height: 100px !important;
+  max-height: 100px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+}
+
+/* Número del día en posición fija arriba */
+.fc-daygrid-day-top {
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+/* Contenedor de eventos con scroll */
+.fc-daygrid-day-events {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: 75px !important;
+  margin: 0 !important;
+  padding: 2px !important;
+  scrollbar-width: thin;
+  scrollbar-color: #a3b87a #e6edd6;
+}
+
+/* Scrollbar personalizado para webkit (Chrome, Safari, Edge) */
+.fc-daygrid-day-events::-webkit-scrollbar {
+  width: 5px;
+}
+
+.fc-daygrid-day-events::-webkit-scrollbar-track {
+  background: #e6edd6;
+  border-radius: 2px;
+}
+
+.fc-daygrid-day-events::-webkit-scrollbar-thumb {
+  background-color: #a3b87a;
+  border-radius: 2px;
+}
+
+.fc-daygrid-day-events::-webkit-scrollbar-thumb:hover {
+  background-color: #8fae3d;
+}
+
+/* Ocultar el "más" de FullCalendar ya que ahora todo es scrolleable */
+.fc-daygrid-more-link {
+  display: none !important;
+}
+
+/* Evitar que el bottom de eventos empuje el contenido */
+.fc-daygrid-day-bottom {
+  display: none !important;
+}
+
+/* Ajustar eventos para que no se salgan */
+.fc-daygrid-event-harness {
+  margin-bottom: 1px !important;
+}
+
+.fc-daygrid-day-number {
+  color: #4a4a4a;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.fc-day-today {
+  background-color: #e4efc5 !important;
+  border: 1px solid #e6e9e0 !important;
+}
+
+/* === EVENTOS === */
+.fc-event {
+  background-color: #8fae3d;
+  border: none;
+  border-radius: 0.4rem;
+  color: #1a1a1a;
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  transition: background 0.2s ease;
+}
+
+.fc-event:hover {
+  background-color: #b8cc8c;
+}
+
+/* === LIST VIEW === */
+.fc-list-day {
+  background-color: #d9e5b9;
+  color: #1a1a1a;
+  border-bottom: 1px solid #a3b87a;
+}
+
+.fc-list-event {
+  color: #1a1a1a;
+}
+
+.fc-list-event:hover {
+  background-color: #d9e5b9;
+}
+
+/* === QUITAR PUNTOS DE UL === */
+.fc-daygrid-event,
+.fc-daygrid-event-dot {
+  list-style: none !important;
+}
+
+/* === VISTA DE DÍA (TIMEGRID) - EVENTOS === */
+/* Hacer que los eventos ocupen el 80% del ancho y se alineen a la derecha */
+.fc-timegrid-event-harness {
+  width: 80% !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  left: auto !important;
+  right: 0 !important;
+}
+
+/* Estilo de los eventos en vista de día */
+.fc-timegrid-event {
+  border-radius: 0.4rem;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Ajustar el contenedor de eventos */
+.fc-timegrid-col-events {
+  margin: 0 !important;
+}
+
+/* Reducir el padding de las celdas de tiempo */
+.fc-timegrid-slot {
+  height: 3em !important;
+}
+
+/* Ajustar el título del evento */
+.fc-timegrid-event .fc-event-title {
+  font-weight: 500;
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* Ajustar el tiempo del evento */
+.fc-timegrid-event .fc-event-time {
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: none; /* Ocultamos el tiempo por defecto ya que lo mostramos en el título */
+}
+
+/* Contenido del evento en vista de día */
+.fc-timegrid-event .fc-event-main {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === ESTILOS PARA DÍAS Y SLOTS PASADOS === */
+
+/* Días pasados en vista mensual - color diferente pero clickeable */
+.fc-day-past-clickable {
+  background-color: #e8e8e8 !important;
+  cursor: pointer !important;
+}
+
+.fc-day-past-clickable .fc-daygrid-day-number {
+  color: #6c757d !important;
+  font-weight: 400 !important;
+}
+
+.fc-day-past-clickable .fc-daygrid-day-frame {
+  background-color: #e8e8e8 !important;
+}
+
+/* Permitir hover en días pasados */
+.fc-day-past-clickable:hover {
+  background-color: #d8d8d8 !important;
+  cursor: pointer !important;
+}
+
+/* Los eventos en días pasados son completamente clickeables */
+.fc-day-past-clickable .fc-event {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Slots de tiempo pasados en vista diaria - bloqueados */
+.fc-slot-past {
+  background-color: #f8f9fa !important;
+  opacity: 0.6;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Líneas de la agenda diaria - gris claro (bg-light) */
+.fc-timegrid-slot {
+  border-color: #dee2e6 !important;
+}
+
+.fc-timegrid-divider {
+  border-color: #dee2e6 !important;
+}
+
+/* Líneas verticales en vista diaria */
+.fc-timegrid-col {
+  border-color: #dee2e6 !important;
+}
+
+/* Líneas horizontales en vista diaria */
+.fc-timegrid-slot-lane {
+  border-color: #dee2e6 !important;
+}
+
+/* Todas las líneas de la cuadrícula en vista diaria */
+.fc-timegrid-axis,
+.fc-timegrid-slot-label {
+  border-color: #dee2e6 !important;
+}
+
+/* Línea del eje de tiempo */
+.fc-timegrid .fc-scrollgrid-section > * {
+  border-color: #dee2e6 !important;
+}
+
+/* Bordes generales de la vista diaria */
+.fc-timegrid td,
+.fc-timegrid th {
+  border-color: #dee2e6 !important;
+}
