@@ -117,7 +117,7 @@ export default function Sidebar() {
       <button 
         className="btn btn-dark d-md-none position-fixed top-0 start-0 m-3" 
         onClick={toggleSidebar}
-        style={{ zIndex: 1000 }}
+        style={{ zIndex: 1030 }}
       >
         ☰
       </button>
