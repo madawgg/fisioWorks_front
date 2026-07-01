@@ -59,7 +59,7 @@ export default function CreateMedicalHistory() {
         }
       } catch (err) {
         toast.error("Error al cargar los datos");
-        console.error(err);
+        console.error(err.response?.data || err.message);
       } finally {
         setLoadingData(false);
       }

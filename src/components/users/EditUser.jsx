@@ -50,7 +50,7 @@ useEffect(() => {
 
       setUserRole(role);
     } catch (err) {
-      console.error("Error al cargar usuario:", err);
+      console.error("Error al cargar usuario:", err.response?.data || err.message);
       setError("No se pudo cargar el usuario");
     } finally {
       setLoading(false);

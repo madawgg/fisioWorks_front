@@ -1,14 +1,11 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getPatientBono } from "../../api/patientBono.js";
 import { useState, useEffect } from "react";
 import Header from "../layouts/Header.jsx";
 import DetailLayout from "../layouts/DetailLayout.jsx";
-import { useAuth } from "../../hooks/useAuth.js";
 
 export default function ShowPatientBono() {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const { user } = useAuth();
   const [patientBono, setPatientBono] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

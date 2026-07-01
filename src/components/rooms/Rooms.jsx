@@ -11,7 +11,6 @@ export default function Rooms() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showEquipment, setShowEquipment] = useState(false);
 
   useEffect(() => {
     getRooms()

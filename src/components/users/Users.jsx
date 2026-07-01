@@ -7,6 +7,9 @@ import Header from "../layouts/Header.jsx";
 import "./Users.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const PAGE_SIZE = 10;
+
 export default function Users() {
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
@@ -32,11 +35,15 @@ export default function Users() {
     role: "all",
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     if (hasLoadedRef.current) return;
     hasLoadedRef.current = true;
 
     loadUsers();
+    // Ejecución única controlada por hasLoadedRef; loadUsers no necesita ir en deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadUsers = async (forceReload = false) => {
@@ -90,7 +97,7 @@ export default function Users() {
       
       setUserRoles(rolesMap);
     } catch (error) {
-      console.error("Error al cargar roles:", error);
+      console.error("Error al cargar roles:", error.response?.data || error.message);
     }
   };
 
@@ -117,6 +124,24 @@ export default function Users() {
       return true;
     });
   }, [users, filters, userRoles]);
+
+  // Paginación en cliente sobre la lista ya filtrada.
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+
+  const paginatedUsers = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredUsers.slice(start, start + PAGE_SIZE);
+  }, [filteredUsers, currentPage]);
+
+  // Volver a la primera página al cambiar los filtros.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
+  // Ajustar la página si la lista se encoge (p. ej. tras eliminar un usuario).
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
 
   const handleFilterChange = (field, value) =>
     setFilters((prev) => ({ ...prev, [field]: value }));
@@ -343,7 +368,7 @@ export default function Users() {
                       </td>
                     </tr>
                   ) : (
-                    filteredUsers.map((user) => {
+                    paginatedUsers.map((user) => {
                       const isDeleted = !!user.deleted_at;
 
                       return (
@@ -474,6 +499,57 @@ export default function Users() {
             </div>
           </div>
         </div>
+
+        {totalPages > 1 && (
+          <div className="d-flex justify-content-center align-items-center gap-3 mt-4 mb-2">
+            <button
+              className="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                />
+              </svg>
+              Anterior
+            </button>
+
+            <span className="text-muted small">
+              Página <strong className="text-success">{currentPage}</strong> de{" "}
+              <strong>{totalPages}</strong>
+            </span>
+
+            <button
+              className="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
+              disabled={currentPage === totalPages}
+              onClick={() =>
+                setCurrentPage((p) => Math.min(totalPages, p + 1))
+              }
+            >
+              Siguiente
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

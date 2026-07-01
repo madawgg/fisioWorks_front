@@ -53,7 +53,7 @@ export default function EditMedicalHistory() {
         }
       } catch (err) {
         setError("Error al cargar los datos");
-        console.error(err);
+        console.error(err.response?.data || err.message);
       } finally {
         setLoadingData(false);
       }

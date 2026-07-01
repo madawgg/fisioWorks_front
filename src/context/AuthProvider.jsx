@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   login as loginApi,
+  demoLogin as demoLoginApi,
   logout as logoutApi,
   getCurrentUser,
   getUserRole,
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!hasToken);
+  const [isDemo, setIsDemo] = useState(localStorage.getItem("demo") === "true");
 
   const hasVerifiedTokenRef = useRef(false);
 
@@ -40,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(finalUser));
       })
       .catch((error) => {
-        console.error("Error al verificar token:", error);
+        console.error("Error al verificar token:", error.response?.data || error.message);
 
         if (error.response?.status === 401) {
           localStorage.removeItem("token");
@@ -63,6 +65,8 @@ export const AuthProvider = ({ children }) => {
       if (!token) throw new Error("No se recibió token");
 
       localStorage.setItem("token", token);
+      localStorage.removeItem("demo");
+      setIsDemo(false);
 
       // Obtener datos completos del usuario (incluye patient/therapist)
       const userDataResponse = await getCurrentUser();
@@ -80,10 +84,45 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      console.error("Error en login:", error);
+      console.error("Error en login:", error.response?.data || error.message);
       return {
         success: false,
         message: error.response?.data?.message || "Error al iniciar sesión",
+      };
+    }
+  };
+
+  const loginDemo = async () => {
+    try {
+      const response = await demoLoginApi();
+
+      const token = response.token || response.data?.token;
+
+      if (!token) throw new Error("No se recibió token");
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("demo", "true");
+      setIsDemo(true);
+
+      const userDataResponse = await getCurrentUser();
+      const userData = userDataResponse.data || userDataResponse;
+
+      const rolesResponse = await getUserRole();
+      const roles = rolesResponse.data?.roles || rolesResponse.roles || rolesResponse.data || [];
+
+      const finalUser = { ...userData, roles };
+
+      setUser(finalUser);
+      localStorage.setItem("user", JSON.stringify(finalUser));
+
+      setIsAuthenticated(true);
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error en login demo:", error.response?.data || error.message);
+      return {
+        success: false,
+        message: error.response?.data?.message || "Error al iniciar la demo",
       };
     }
   };
@@ -92,17 +131,19 @@ export const AuthProvider = ({ children }) => {
     try {
       await logoutApi();
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      console.error("Error al cerrar sesión:", error.response?.data || error.message);
     } finally {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("demo");
       setUser(null);
       setIsAuthenticated(false);
+      setIsDemo(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isDemo, login, loginDemo, logout }}>
       {children}
     </AuthContext.Provider>
   );

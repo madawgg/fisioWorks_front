@@ -1,7 +1,9 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api",
+  // Configurable por entorno (VITE_API_URL). Fallback a localhost para desarrollo.
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -27,11 +29,21 @@ apiClient.interceptors.response.use(
       localStorage.removeItem("token");
       //Borrar user
       localStorage.removeItem("user");
+      localStorage.removeItem("demo");
       //Redirigir a login
       if (!window.location.pathname.includes("/login")) {
         window.location.href = "/login";
       }
     }
+
+    // 403: acción no permitida (p. ej. escritura en modo demo de solo lectura)
+    if (error.response?.status === 403) {
+      const message =
+        error.response?.data?.message ||
+        "Acción no permitida en modo demo (solo lectura).";
+      toast.warning(message);
+    }
+
     return Promise.reject(error);
   }
 );

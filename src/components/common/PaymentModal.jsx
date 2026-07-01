@@ -58,7 +58,7 @@ export default function PaymentModal({ show, onHide, onConfirmPayment, amount, i
         await onConfirmPayment();
         handleClose();
       } catch (error) {
-        console.error("Error en el pago:", error);
+        console.error("Error en el pago:", error.response?.data || error.message);
       } finally {
         setProcessing(false);
       }

@@ -30,7 +30,7 @@ export const isAdmin = async (userId) => {
     
     return isUserAdmin;
   } catch (error) {
-    console.error("Error al verificar si es admin:", error);
+    console.error("Error al verificar si es admin:", error.response?.data || error.message);
     return false;
   }
 };

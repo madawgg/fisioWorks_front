@@ -4,6 +4,7 @@ Single Page Application for managing a physiotherapy clinic ("FisioWorks Agenda"
 
 ## Table of contents
 
+- [About the project](#about-the-project)
 - [Tech stack](#tech-stack)
 - [Features](#features)
 - [Screenshots](#screenshots)
@@ -13,8 +14,19 @@ Single Page Application for managing a physiotherapy clinic ("FisioWorks Agenda"
 - [Configuration](#configuration)
 - [Project structure](#project-structure)
 - [Authentication & roles](#authentication--roles)
+- [Demo mode](#demo-mode)
 - [Routes](#routes)
 - [API layer](#api-layer)
+
+## About the project
+
+FisioWorks started as an **end-of-course final project**, but it was never meant to be a throwaway exercise: it was designed around the **real needs of a small physiotherapy clinic**. The requirements were gathered directly in conversation with the clinic's owner, and the application was tailored to how the clinic actually operates day to day.
+
+The system is **in production**, running on the client's own server (which can't be named here for privacy reasons).
+
+The project is deliberately split into a separate **[API](https://github.com/madawgg/FisioWorks_API)** (Laravel + Sanctum) and **frontend** (this repository). This separation is by design: it keeps the backend independent so the same API can power additional clients in the future — for example a **mobile app** or a **desktop application** — reusing the same backend.
+
+> ⚠️ **Note:** This public repository is **demonstrative only** and does **not** reflect the current state of the production code. It has been intentionally simplified to protect the security of the live system and the client's data. Treat it as a portfolio showcase, not the deployed source.
 
 ## Tech stack
 
@@ -24,7 +36,6 @@ Single Page Application for managing a physiotherapy clinic ("FisioWorks Agenda"
 - **Axios** ^1.13 (HTTP client with interceptors)
 - **Bootstrap 5** + **react-bootstrap** (UI)
 - **FullCalendar** ^6.1 (appointment calendar / agenda)
-- **lucide-react** (icons)
 - **react-select** (rich selects)
 - **react-toastify** (notifications)
 - **ESLint** ^9 (linting)
@@ -100,16 +111,24 @@ npm run lint      # Runs ESLint
 
 ## Configuration
 
-The API base URL is defined in [`src/api/apiClient.js`](src/api/apiClient.js):
+The API base URL is read from the **`VITE_API_URL`** environment variable in [`src/api/apiClient.js`](src/api/apiClient.js), with a localhost fallback for development:
 
 ```js
-const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api",
-  headers: { "Content-Type": "application/json" },
-});
+baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api",
 ```
 
-To point the frontend to another backend, change `baseURL` there.
+Copy the template and adjust it:
+
+```bash
+cp .env.example .env    # then edit VITE_API_URL if needed
+```
+
+```env
+# .env
+VITE_API_URL=http://localhost:8000/api
+```
+
+> **Important:** Vite injects env vars at **build time**, not runtime. For deployment, set `VITE_API_URL` to your public API URL **before** running `npm run build` — the value gets baked into the bundle. `.env` is git-ignored; `.env.example` is the versioned template.
 
 > For production / SPA hosting, make sure the server rewrites all routes to `index.html` (e.g. an `.htaccess` rule on Apache or a catch-all rewrite on Nginx), since routing is handled client-side by React Router.
 
@@ -153,6 +172,27 @@ The [`Sidebar`](src/components/layouts/Sidebar.jsx) renders different navigation
 | Admin       | Users, Agenda, Treatments, Rooms, Vouchers, Specialties              |
 | Therapist   | Users, Agenda, Treatments, Rooms, Vouchers                          |
 | Patient     | Agenda, Treatments, Vouchers                                        |
+
+## Demo mode
+
+A **"Try the demo"** button on the login screen lets visitors explore the entire app without registering — backed by the API's [read-only demo mode](https://github.com/madawgg/FisioWorks_API#demo-mode-read-only).
+
+**How it works**
+
+1. The button calls `loginDemo()` ([AuthProvider.jsx](src/context/AuthProvider.jsx)), which hits `POST /demo-login` and stores a read-only Sanctum token plus an `isDemo` flag.
+2. The user enters as an admin and can browse everything (calendar, users, treatments, rooms, vouchers, specialties...).
+3. A banner — *"🔒 Modo demo — solo lectura. Los cambios no se guardarán."* — is shown in [MainLayout.jsx](src/components/layouts/MainLayout.jsx) while `isDemo` is active.
+4. Any write request is rejected by the API with a `403`; the axios interceptor in [apiClient.js](src/api/apiClient.js) catches it and shows a friendly toast instead of an error.
+
+> Routing is **not** restricted by role, so the demo user can navigate anywhere — but the data is safe because the API blocks every write at the token level. The banner and toast are purely UX polish.
+
+| Piece | Location |
+|-------|----------|
+| Demo login button | [`Welcome.jsx`](src/components/Welcome.jsx) |
+| `loginDemo()` + `isDemo` flag | [`AuthProvider.jsx`](src/context/AuthProvider.jsx) |
+| `demoLogin()` API call | [`auth.js`](src/api/auth.js) |
+| Demo banner | [`MainLayout.jsx`](src/components/layouts/MainLayout.jsx) |
+| 403 toast handling | [`apiClient.js`](src/api/apiClient.js) |
 
 ## Routes
 

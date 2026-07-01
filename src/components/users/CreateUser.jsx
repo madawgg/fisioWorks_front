@@ -29,7 +29,7 @@ function CreateUser() {
       
       navigate("/users");
     } catch (err) {
-      console.error("Error en handleSubmit:", err);
+      console.error("Error en handleSubmit:", err.response?.data || err.message);
       setError("No se pudo crear el usuario");
       throw new Error("No se pudo crear el usuario");
     }

@@ -8,7 +8,7 @@ import "./users/Users.css";
 
 export default function Welcome() {
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
+  const { login, loginDemo, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -40,6 +40,20 @@ export default function Welcome() {
       navigate("/");
     } else {
       setError(result.message || "Error al iniciar sesión");
+      setLoading(false);
+    }
+  };
+
+  const handleDemo = async () => {
+    setError("");
+    setLoading(true);
+
+    const result = await loginDemo();
+
+    if (result.success) {
+      navigate("/");
+    } else {
+      setError(result.message || "Error al iniciar la demo");
       setLoading(false);
     }
   };
@@ -133,6 +147,15 @@ export default function Welcome() {
           ) : (
             "Entrar"
           )}
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-outline-light w-100 mt-2"
+          onClick={handleDemo}
+          disabled={loading}
+        >
+          Probar demo (solo lectura)
         </button>
 
         <div className="text-center mt-3">

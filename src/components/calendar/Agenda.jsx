@@ -100,7 +100,7 @@ export default function Agenda() {
     if (canFilterByTherapist) {
       getTherapists()
         .then((res) => setTherapists(res.data?.data || []))
-        .catch((err) => console.error("Error cargando terapeutas:", err));
+        .catch((err) => console.error("Error cargando terapeutas:", err.response?.data || err.message));
     }
   }, [canFilterByTherapist]);
 
@@ -126,7 +126,7 @@ export default function Agenda() {
         const appointment = isOnlyPatient ? res.data?.data : res;
         setSelectedAppointment(appointment);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err.response?.data || err.message));
   }
   
   if (loading)

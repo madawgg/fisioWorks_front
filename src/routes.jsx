@@ -1,36 +1,52 @@
-import { createBrowserRouter } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "./components/layouts/MainLayout.jsx";
-import Welcome from "./components/Welcome.jsx";
-import Users from "./components/users/Users.jsx";
-import User from "./components/users/User.jsx";
-import CreateUser from "./components/users/CreateUser.jsx";
-import EditUser from "./components/users/EditUser.jsx";
-import Agenda from "./components/calendar/Agenda.jsx";
-import EditAppointment from "./components/calendar/EditAppointment.jsx";
-import Rooms from "./components/rooms/Rooms.jsx";
-import Room from "./components/rooms/Room.jsx";
-import EditRoom from "./components/rooms/EditRoom.jsx";
-import CreateRoom from "./components/rooms/CreateRoom.jsx";
-import Treatments from "./components/treatments/Treatments.jsx";
-import Treatment from "./components/treatments/Treatment.jsx";
-import EditTreatment from "./components/treatments/EditTreatment.jsx";
-import CreateTreatment from "./components/treatments/CreateTreatment.jsx";
-import Bonos from "./components/bonos/Bonos.jsx";
-import Bono from "./components/bonos/Bono.jsx";
-import EditBono from "./components/bonos/EditBono.jsx";
-import ShowPatientBono from "./components/bonos/ShowPatientBono.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import Specialties from "./components/specialties/Specialties.jsx";
-import Specialty from "./components/specialties/Specialty.jsx";
-import EditSpecialty from "./components/specialties/EditSpecialty.jsx";
-import CreateSpecialty from "./components/specialties/CreateSpecialty.jsx";
-import { Navigate } from "react-router-dom";
-import Appointment from "./components/calendar/Appointment.jsx";
-import CreateMedicalHistory from "./components/medicalHistories/CreateMedicalHistory.jsx";
-import MedicalHistory from "./components/medicalHistories/MedicalHistory.jsx";
-import EditMedicalHistory from "./components/medicalHistories/EditMedicalHistory.jsx";
+// Agenda es la página de inicio (/ redirige a /agenda), así que se carga de
+// forma inmediata para no mostrar un spinner al entrar. FullCalendar se separa
+// en su propio chunk vía manualChunks (vite.config.js) para cargar en paralelo.
+import Agenda from "./components/calendar/Agenda.jsx";
 
-//import EditSpecialty from "./components/specialties/EditSpecialty.jsx";
+// Resto de páginas cargadas de forma diferida (code-splitting por ruta):
+// cada una se descarga solo cuando se navega a su ruta.
+const Welcome = lazy(() => import("./components/Welcome.jsx"));
+const Users = lazy(() => import("./components/users/Users.jsx"));
+const User = lazy(() => import("./components/users/User.jsx"));
+const CreateUser = lazy(() => import("./components/users/CreateUser.jsx"));
+const EditUser = lazy(() => import("./components/users/EditUser.jsx"));
+const EditAppointment = lazy(() => import("./components/calendar/EditAppointment.jsx"));
+const Rooms = lazy(() => import("./components/rooms/Rooms.jsx"));
+const Room = lazy(() => import("./components/rooms/Room.jsx"));
+const EditRoom = lazy(() => import("./components/rooms/EditRoom.jsx"));
+const CreateRoom = lazy(() => import("./components/rooms/CreateRoom.jsx"));
+const Treatments = lazy(() => import("./components/treatments/Treatments.jsx"));
+const Treatment = lazy(() => import("./components/treatments/Treatment.jsx"));
+const EditTreatment = lazy(() => import("./components/treatments/EditTreatment.jsx"));
+const CreateTreatment = lazy(() => import("./components/treatments/CreateTreatment.jsx"));
+const Bonos = lazy(() => import("./components/bonos/Bonos.jsx"));
+const Bono = lazy(() => import("./components/bonos/Bono.jsx"));
+const EditBono = lazy(() => import("./components/bonos/EditBono.jsx"));
+const ShowPatientBono = lazy(() => import("./components/bonos/ShowPatientBono.jsx"));
+const Specialties = lazy(() => import("./components/specialties/Specialties.jsx"));
+const Specialty = lazy(() => import("./components/specialties/Specialty.jsx"));
+const EditSpecialty = lazy(() => import("./components/specialties/EditSpecialty.jsx"));
+const CreateSpecialty = lazy(() => import("./components/specialties/CreateSpecialty.jsx"));
+const Appointment = lazy(() => import("./components/calendar/Appointment.jsx"));
+const CreateMedicalHistory = lazy(() => import("./components/medicalHistories/CreateMedicalHistory.jsx"));
+const MedicalHistory = lazy(() => import("./components/medicalHistories/MedicalHistory.jsx"));
+const EditMedicalHistory = lazy(() => import("./components/medicalHistories/EditMedicalHistory.jsx"));
+
+// Fallback a pantalla completa mientras se descarga el chunk de la página de login.
+const pageLoader = (
+  <div
+    className="d-flex justify-content-center align-items-center"
+    style={{ height: "100vh" }}
+  >
+    <div className="spinner-border text-success" role="status">
+      <span className="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+);
 
 export const adminRouter = createBrowserRouter([
   {
@@ -78,6 +94,10 @@ export const adminRouter = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Welcome />,
+    element: (
+      <Suspense fallback={pageLoader}>
+        <Welcome />
+      </Suspense>
+    ),
   },
 ]);

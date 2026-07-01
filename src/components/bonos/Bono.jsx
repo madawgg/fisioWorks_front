@@ -66,7 +66,7 @@ export default function Bono() {
       setSelectedPatient(null);
       setShowModal(true);
     } catch (error) {
-      console.error(error);
+      console.error(error.response?.data || error.message);
       toast.error("No se pudieron cargar los pacientes");
     }
   };
@@ -94,7 +94,7 @@ export default function Bono() {
         navigate(`/current-user/profile`);
       }
     } catch (error) {
-      console.error(error);
+      console.error(error.response?.data || error.message);
       toast.error("No se pudo comprar el bono");
       throw error;
     }
@@ -122,7 +122,7 @@ export default function Bono() {
         navigate(`/bonos/${bono.id}`);
       }
     } catch (error) {
-      console.error(error);
+      console.error(error.response?.data || error.message);
       toast.error("No se pudo vender el bono a paciente");
       navigate(`/bonos/${bono.id}`);
     }
